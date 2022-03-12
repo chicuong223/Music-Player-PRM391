@@ -28,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
     static List<MusicFiles> musicFiles;
+    static boolean shuffleBoolean = false, repeatBoolean = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.DATA, //for path
+                MediaStore.Audio.Media._ID
         };
 
         //con trỏ để duyệt qua danh sách các audio lấy được
@@ -135,9 +137,10 @@ public class MainActivity extends AppCompatActivity {
                 String duration = cursor.getString(2);
                 String artist = cursor.getString(3);
                 String path = cursor.getString(4);
+                String id = cursor.getString(5);
 
-                MusicFiles musicFiles = new MusicFiles(path, title, album, artist, duration);
-                Log.e("Path:" + path, "Album: " + album);
+                MusicFiles musicFiles = new MusicFiles(path, title, album, artist, duration, id);
+                Log.e("Path:" + path, "ID: " + musicFiles.getId());
                 tmpList.add(musicFiles);
             }
             cursor.close();
