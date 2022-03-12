@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/drawable/gradient_bg.xml" value="0.1" />
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/drawable/ic_chevron_left.xml" value="0.1" />
+        <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/drawable/ic_more.xml" value="0.1" />
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/drawable/ic_pause.xml" value="0.1" />
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/drawable/ic_play.xml" value="0.1" />
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/drawable/ic_repeat_off.xml" value="0.1" />
@@ -16,7 +17,8 @@
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/layout/activity_main.xml" value="0.16" />
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/layout/activity_player.xml" value="0.2" />
         <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/layout/fragment_song.xml" value="0.16" />
-        <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/layout/music_item.xml" value="0.1" />
+        <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/layout/music_item.xml" value="0.2" />
+        <entry key="..\:/Users/GIGABYTE/Desktop/AudioPlayer/app/src/main/res/menu/popup.xml" value="0.10885416666666667" />
       </map>
     </option>
   </component>

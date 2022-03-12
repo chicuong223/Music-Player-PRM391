@@ -1,18 +1,20 @@
 package com.chicuong.audioplayer;
 
 public class MusicFiles {
+    private String id;
     private String path;
     private String title;
     private String album;
     private String artist;
     private String duration;
 
-    public MusicFiles(String path, String title, String album, String artist, String duration) {
+    public MusicFiles(String path, String title, String album, String artist, String duration, String id) {
         this.path = path;
         this.title = title;
         this.album = album;
         this.artist = artist;
         this.duration = duration;
+        this.id = id;
     }
 
     public MusicFiles() {
@@ -56,5 +58,13 @@ public class MusicFiles {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
