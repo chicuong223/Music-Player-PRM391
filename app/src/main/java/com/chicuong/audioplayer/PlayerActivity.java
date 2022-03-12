@@ -103,12 +103,13 @@ public class PlayerActivity extends AppCompatActivity
         shuffleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                repeatBoolean = false;
+                musicService.setLooping(false);
                 if (shuffleBoolean) {
                     shuffleBoolean = false;
                     shuffleBtn.setImageResource(R.drawable.ic_shuffle_off);
                 } else {
                     shuffleBoolean = true;
-                    repeatBoolean = false;
                     repeatBtn.setImageResource(R.drawable.ic_repeat_off);
                     shuffleBtn.setImageResource(R.drawable.ic_shuffle_on);
                 }
@@ -342,6 +343,7 @@ public class PlayerActivity extends AppCompatActivity
                 handler.postDelayed(this, 500);
             }
         });
+        musicService.setLooping(repeatBoolean);
         musicService.onCompleted();
         musicService.showNotification(R.drawable.ic_pause);
         playPauseBtn.setImageResource(R.drawable.ic_pause);
@@ -400,6 +402,7 @@ public class PlayerActivity extends AppCompatActivity
                 handler.postDelayed(this, 500);
             }
         });
+        musicService.setLooping(repeatBoolean);
         playPauseBtn.setImageResource(R.drawable.ic_pause);
         musicService.onCompleted();
         musicService.showNotification(R.drawable.ic_pause);
