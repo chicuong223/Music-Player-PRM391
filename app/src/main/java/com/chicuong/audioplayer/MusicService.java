@@ -4,6 +4,10 @@ import static com.chicuong.audioplayer.ApplicationClass.ACTION_NEXT;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PLAY;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PREVIOUS;
 import static com.chicuong.audioplayer.ApplicationClass.CHANNEL_ID_2;
+import static com.chicuong.audioplayer.MainActivity.ARTIST_NAME;
+import static com.chicuong.audioplayer.MainActivity.SONG_FILE;
+import static com.chicuong.audioplayer.MainActivity.SONG_LAST_PLAYED;
+import static com.chicuong.audioplayer.MainActivity.SONG_NAME;
 import static com.chicuong.audioplayer.PlayerActivity.listSong;
 
 import android.app.Notification;
@@ -11,6 +15,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -37,7 +42,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     ActionPlaying actionPlaying;
     MediaSessionCompat mediaSessionCompat;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,25 +66,13 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         if (actionName != null) {
             switch (actionName) {
                 case "playPause":
-//                    Toast.makeText(this, "PlayPause"
-//                            , Toast.LENGTH_SHORT).show();
-                    if (actionPlaying != null) {
-                        actionPlaying.playPauseBtnClicked();
-                    }
+                    playPauseBtnClicked();
                     break;
                 case "next":
-//                    Toast.makeText(this, "Next"
-//                            , Toast.LENGTH_SHORT).show();
-                    if (actionPlaying != null) {
-                        actionPlaying.nextBtnClicked();
-                    }
+                    nextBtnClicked();
                     break;
                 case "previous":
-//                    Toast.makeText(this, "Previous"
-//                            , Toast.LENGTH_SHORT).show();
-                    if (actionPlaying != null) {
-                        actionPlaying.prevBtnClicked();
-                    }
+                    prevBtnClicked();
                     break;
             }
         }
@@ -102,7 +94,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             mediaPlayer.start();
         }
     }
-
 
     public class MyBinder extends Binder {
         MusicService getService() {
@@ -141,7 +132,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     void createMediaPlayer(int positionInner) {
         position = positionInner;
         uri = Uri.parse(listSong.get(position).getPath());
-
+        SharedPreferences.Editor editor = getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE)
+                .edit();
+        editor.putString(SONG_FILE, uri.toString());
+        editor.putString(ARTIST_NAME, musicFiles.get(position).getArtist());
+        editor.putString(SONG_NAME, musicFiles.get(position).getTitle());
+        editor.apply();
         mediaPlayer = MediaPlayer.create(getBaseContext(), uri);
     }
 
@@ -249,5 +245,23 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         //after using retriever, we must release it
         retriever.release();
         return art;
+    }
+
+    void nextBtnClicked() {
+        if (actionPlaying != null) {
+            actionPlaying.nextBtnClicked();
+        }
+    }
+
+    void playPauseBtnClicked() {
+        if (actionPlaying != null) {
+            actionPlaying.playPauseBtnClicked();
+        }
+    }
+
+    void prevBtnClicked() {
+        if (actionPlaying != null) {
+            actionPlaying.prevBtnClicked();
+        }
     }
 }

@@ -4,6 +4,7 @@ import static com.chicuong.audioplayer.ApplicationClass.ACTION_NEXT;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PLAY;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PREVIOUS;
 import static com.chicuong.audioplayer.ApplicationClass.CHANNEL_ID_2;
+import static com.chicuong.audioplayer.MainActivity.SHOW_MINI_PLAYER;
 import static com.chicuong.audioplayer.MainActivity.musicFiles;
 import static com.chicuong.audioplayer.MainActivity.repeatBoolean;
 import static com.chicuong.audioplayer.MainActivity.shuffleBoolean;
@@ -11,6 +12,7 @@ import static com.chicuong.audioplayer.MainActivity.shuffleBoolean;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -129,6 +131,13 @@ public class PlayerActivity extends AppCompatActivity
                     musicService.setLooping(true);
                     repeatBtn.setImageResource(R.drawable.ic_repeat_on);
                 }
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

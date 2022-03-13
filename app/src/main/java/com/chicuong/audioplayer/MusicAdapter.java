@@ -1,5 +1,7 @@
 package com.chicuong.audioplayer;
 
+import static com.chicuong.audioplayer.MainActivity.SHOW_MINI_PLAYER;
+
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -70,6 +73,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                 Intent intent = new Intent(_mContext, PlayerActivity.class);
                 intent.putExtra("position", position);
                 _mContext.startActivity(intent);
+                SHOW_MINI_PLAYER = true;
             }
         });
         holder.menuMore.setOnClickListener(new View.OnClickListener() {
