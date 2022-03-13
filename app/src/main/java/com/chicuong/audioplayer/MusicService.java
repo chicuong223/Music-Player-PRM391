@@ -14,6 +14,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -59,8 +60,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int myPosition = intent.getIntExtra("servicePosition", -1);
+        boolean isContinue = intent.getBooleanExtra("isContinue", false);
         String actionName = intent.getStringExtra("ActionName");
-        if (myPosition != -1) {
+        if (myPosition != -1 && !isContinue) {
             playMedia(myPosition);
         }
         if (actionName != null) {
@@ -173,9 +175,13 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     void showNotification(int playPauseBtn) {
-        Intent intent = new Intent(this, PlayerActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0
-                , intent, 0);
+        Intent intent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(intent);
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0
+//                , intent, 0);
+        PendingIntent resultPending =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent prevIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_PREVIOUS);
@@ -218,6 +224,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentIntent(resultPending)
                 .build();
 
         /* Send notification */
