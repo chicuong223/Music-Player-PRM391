@@ -96,6 +96,13 @@ public class PlayerActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (musicService != null) {
+                    if(musicService.close) {
+                        handler.removeCallbacks(this);
+                        finish();
+//                        musicService.stop();
+//                        musicService.release();
+                        return;
+                    }
                     int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                     seekBar.setProgress(mCurrentPosition);
                     durationPlayed.setText(formattedTime(mCurrentPosition));
@@ -273,6 +280,12 @@ public class PlayerActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     if (musicService != null) {
+                        if(musicService.close) {
+                            handler.removeCallbacks(this);
+//                            musicService.stop();
+//                            musicService.release();
+                            return;
+                        }
                         int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                         seekBar.setProgress(mCurrentPosition);
                     }
@@ -288,6 +301,12 @@ public class PlayerActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     if (musicService != null) {
+                        if(musicService.close) {
+                            handler.removeCallbacks(this);
+//                            musicService.stop();
+//                            musicService.release();
+                            return;
+                        }
                         int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                         seekBar.setProgress(mCurrentPosition);
                     }
@@ -317,6 +336,12 @@ public class PlayerActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (musicService != null) {
+                    if(musicService.close) {
+                        handler.removeCallbacks(this);
+//                        musicService.stop();
+//                        musicService.release();
+                        return;
+                    }
                     int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                     seekBar.setProgress(mCurrentPosition);
                 }
@@ -360,6 +385,12 @@ public class PlayerActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (musicService != null) {
+                    if(musicService.close) {
+                        handler.removeCallbacks(this);
+//                        musicService.stop();
+//                        musicService.release();
+                        return;
+                    }
                     int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                     seekBar.setProgress(mCurrentPosition);
                 }

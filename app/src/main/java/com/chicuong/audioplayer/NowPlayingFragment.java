@@ -50,7 +50,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if(view == null) {
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_now_playing,
                     container, false);
         }
@@ -65,9 +65,9 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(service != null && service.mediaPlayer != null) {
+                if (service != null && service.mediaPlayer != null) {
                     service.nextBtnClicked();
-                    if(getActivity() != null) {
+                    if (getActivity() != null) {
                         SharedPreferences.Editor editor = getActivity().getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE)
                                 .edit();
                         editor.putString(SONG_FILE,
@@ -79,34 +79,30 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
                         String path = preferences.getString(SONG_FILE, null);
                         String song = preferences.getString(SONG_NAME, null);
                         String artistName = preferences.getString(ARTIST_NAME, null);
-                        if(path != null) {
+                        if (path != null) {
                             SHOW_MINI_PLAYER = true;
                             PATH_TO_FRAG = path;
                             ARTIST_TO_FRAG = artistName;
                             SONG_NAME_TO_FRAG = song;
-                        }
-                        else {
+                        } else {
                             SHOW_MINI_PLAYER = false;
                             PATH_TO_FRAG = null;
                             ARTIST_TO_FRAG = null;
                             SONG_NAME_TO_FRAG = null;
                         }
-                        if(SHOW_MINI_PLAYER) {
-                            if(PATH_TO_FRAG != null) {
-                                byte[] art = getAlbumArt(PATH_TO_FRAG);
-                                if(art != null) {
-                                    Glide.with(getContext())
-                                            .load(art)
-                                            .into(albumArt);
-                                }
-                                else {
-                                    Glide.with(getContext())
-                                            .load(R.drawable.music_icon)
-                                            .into(albumArt);
-                                }
-                                songName.setText(SONG_NAME_TO_FRAG);
-                                artist.setText(ARTIST_TO_FRAG);
+                        if (SHOW_MINI_PLAYER) {
+                            byte[] art = getAlbumArt(PATH_TO_FRAG);
+                            if (art != null) {
+                                Glide.with(getContext())
+                                        .load(art)
+                                        .into(albumArt);
+                            } else {
+                                Glide.with(getContext())
+                                        .load(R.drawable.music_icon)
+                                        .into(albumArt);
                             }
+                            songName.setText(SONG_NAME_TO_FRAG);
+                            artist.setText(ARTIST_TO_FRAG);
                         }
                     }
                 }
@@ -116,9 +112,9 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
         prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(service != null && service.mediaPlayer != null) {
+                if (service != null && service.mediaPlayer != null) {
                     service.prevBtnClicked();
-                    if(getActivity() != null) {
+                    if (getActivity() != null) {
                         SharedPreferences.Editor editor = getActivity().getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE)
                                 .edit();
                         editor.putString(SONG_FILE,
@@ -130,27 +126,25 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
                         String path = preferences.getString(SONG_FILE, null);
                         String song = preferences.getString(SONG_NAME, null);
                         String artistName = preferences.getString(ARTIST_NAME, null);
-                        if(path != null) {
+                        if (path != null) {
                             SHOW_MINI_PLAYER = true;
                             PATH_TO_FRAG = path;
                             ARTIST_TO_FRAG = artistName;
                             SONG_NAME_TO_FRAG = song;
-                        }
-                        else {
+                        } else {
                             SHOW_MINI_PLAYER = false;
                             PATH_TO_FRAG = null;
                             ARTIST_TO_FRAG = null;
                             SONG_NAME_TO_FRAG = null;
                         }
-                        if(SHOW_MINI_PLAYER) {
-                            if(PATH_TO_FRAG != null) {
+                        if (SHOW_MINI_PLAYER) {
+                            if (PATH_TO_FRAG != null) {
                                 byte[] art = getAlbumArt(PATH_TO_FRAG);
-                                if(art != null) {
+                                if (art != null) {
                                     Glide.with(getContext())
                                             .load(art)
                                             .into(albumArt);
-                                }
-                                else {
+                                } else {
                                     Glide.with(getContext())
                                             .load(R.drawable.music_icon)
                                             .into(albumArt);
@@ -167,12 +161,11 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(service != null && service.mediaPlayer != null) {
+                if (service != null && service.mediaPlayer != null) {
                     service.playPauseBtnClicked();
-                    if(service.isPlaying()) {
+                    if (service.isPlaying()) {
                         playPauseBtn.setImageResource(R.drawable.ic_pause);
-                    }
-                    else {
+                    } else {
                         playPauseBtn.setImageResource(R.drawable.ic_play);
                     }
                 }
@@ -182,7 +175,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
         layoutSongArtist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(service != null) {
+                if (service != null) {
                     Intent intent = new Intent(getContext(), PlayerActivity.class);
                     intent.putExtra("position", service.position);
                     intent.putExtra("continue", true);
@@ -194,7 +187,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
         albumArt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(service != null) {
+                if (service != null) {
                     Intent intent = new Intent(getContext(), PlayerActivity.class);
                     intent.putExtra("position", service.position);
                     intent.putExtra("continue", true);
@@ -204,8 +197,8 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
         });
 
 
-        if(service != null) {
-            if(service.isPlaying()) {
+        if (service != null) {
+            if (service.isPlaying()) {
                 playPauseBtn.setImageResource(R.drawable.ic_pause);
             }
         }
@@ -230,15 +223,14 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
     @Override
     public void onResume() {
         super.onResume();
-        if(SHOW_MINI_PLAYER) {
-            if(PATH_TO_FRAG != null) {
+        if (SHOW_MINI_PLAYER) {
+            if (PATH_TO_FRAG != null) {
                 byte[] art = getAlbumArt(PATH_TO_FRAG);
-                if(art != null) {
+                if (art != null) {
                     Glide.with(getContext())
                             .load(art)
                             .into(albumArt);
-                }
-                else {
+                } else {
                     Glide.with(getContext())
                             .load(R.drawable.music_icon)
                             .into(albumArt);
@@ -248,22 +240,22 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
 
                 //getContext(): get the context that the fragment is bound to
                 Intent intent = new Intent(getContext(), MusicService.class);
-                if(getContext() != null) {
+                if (getContext() != null) {
                     getContext().bindService(intent, this, Context.BIND_AUTO_CREATE);
                 }
             }
         }
-        if(service != null && service.mediaPlayer != null) {
-            if(service.isPlaying()) {
-                playPauseBtn.setImageResource(R.drawable.ic_pause);
-            }
-        }
+//        if (service != null && service.mediaPlayer != null) {
+//            if (service.isPlaying()) {
+//                playPauseBtn.setImageResource(R.drawable.ic_pause);
+//            }
+//        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if(getContext() != null) {
+        if (getContext() != null) {
             getContext().unbindService(this);
         }
     }

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import android.widget.Toast;
 
 public class ApplicationClass extends Application {
     public static final String CHANNEL_ID_1 = "channel1";
@@ -16,6 +17,12 @@ public class ApplicationClass extends Application {
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        Toast.makeText(this, "Terminated", Toast.LENGTH_SHORT).show();
     }
 
     private void createNotificationChannel() {

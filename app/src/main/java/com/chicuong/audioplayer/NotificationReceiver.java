@@ -7,6 +7,7 @@ import static com.chicuong.audioplayer.ApplicationClass.ACTION_PREVIOUS;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 public class NotificationReceiver extends BroadcastReceiver {
     @Override
@@ -27,6 +28,10 @@ public class NotificationReceiver extends BroadcastReceiver {
                     break;
                 case ACTION_PREVIOUS:
                     serviceIntent.putExtra("ActionName", "previous");
+                    context.startService(serviceIntent);
+                    break;
+                case "Close":
+                    serviceIntent.putExtra("Close", true);
                     context.startService(serviceIntent);
                     break;
             }

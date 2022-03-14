@@ -42,6 +42,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     int position = -1;
     ActionPlaying actionPlaying;
     MediaSessionCompat mediaSessionCompat;
+    boolean close = false;
 
     @Override
     public void onCreate() {
@@ -61,9 +62,19 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public int onStartCommand(Intent intent, int flags, int startId) {
         int myPosition = intent.getIntExtra("servicePosition", -1);
         boolean isContinue = intent.getBooleanExtra("isContinue", false);
+        close = intent.getBooleanExtra("Close", false);
         String actionName = intent.getStringExtra("ActionName");
         if (myPosition != -1 && !isContinue) {
             playMedia(myPosition);
+        }
+        if(close) {
+            if(mediaPlayer != null) {
+//                mediaPlayer.pause();
+                mediaPlayer.stop();
+                mediaPlayer.release();
+            }
+            stopForeground(true);
+            stopSelf();
         }
         if (actionName != null) {
             switch (actionName) {
@@ -90,11 +101,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             if (musicFiles != null) {
                 createMediaPlayer(position);
             }
-            mediaPlayer.start();
         } else {
             createMediaPlayer(position);
-            mediaPlayer.start();
         }
+        mediaPlayer.start();
     }
 
     public class MyBinder extends Binder {
@@ -201,6 +211,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .getBroadcast(this, 0, nextIntent
                         , PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Intent closeIntent = new Intent(this, NotificationReceiver.class)
+                .setAction("Close")
+                .putExtra("Close", true);
+        PendingIntent closePending = PendingIntent
+                .getBroadcast(this, 0, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         //album picture to display on notification
         byte[] picture = null;
         picture = getAlbumArt(musicFiles.get(position).getPath());
@@ -219,6 +235,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .addAction(R.drawable.ic_previous, "Previous", prevPending)
                 .addAction(playPauseBtn, "Pause", pausePending)
                 .addAction(R.drawable.ic_next, "Next", nextPending)
+                .addAction(R.drawable.ic_close, "Close", closePending)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
