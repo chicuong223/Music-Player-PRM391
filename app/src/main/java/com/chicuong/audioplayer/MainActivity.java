@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //do what permission related
                 Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                musicFiles = getAllAudio(this);
+                initViewPager();
             } else {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
                         , REQUEST_CODE);
