@@ -4,6 +4,7 @@ import static com.chicuong.audioplayer.ApplicationClass.ACTION_NEXT;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PLAY;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PREVIOUS;
 import static com.chicuong.audioplayer.ApplicationClass.CHANNEL_ID_2;
+import static com.chicuong.audioplayer.MainActivity.SHOW_MINI_PLAYER;
 import static com.chicuong.audioplayer.MainActivity.musicFiles;
 import static com.chicuong.audioplayer.MainActivity.repeatBoolean;
 import static com.chicuong.audioplayer.MainActivity.shuffleBoolean;
@@ -11,6 +12,7 @@ import static com.chicuong.audioplayer.MainActivity.shuffleBoolean;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -58,14 +60,16 @@ public class PlayerActivity extends AppCompatActivity
     private Handler handler = new Handler();
     private Thread playThread, prevThread, nextThread;
     MusicService musicService;
+    boolean isContinue = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setFullScreen();
         setContentView(R.layout.activity_player);
         Objects.requireNonNull(getSupportActionBar()).hide();
         initViews();
+        isContinue = getIntent().getBooleanExtra("continue", false);
         getIntentMethod();
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -92,11 +96,18 @@ public class PlayerActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (musicService != null) {
+                    if(musicService.close) {
+                        handler.removeCallbacks(this);
+                        finish();
+//                        musicService.stop();
+//                        musicService.release();
+                        return;
+                    }
                     int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                     seekBar.setProgress(mCurrentPosition);
                     durationPlayed.setText(formattedTime(mCurrentPosition));
                 }
-                handler.postDelayed(this, 500);
+                handler.postDelayed(this, 250);
             }
         });
 
@@ -129,6 +140,13 @@ public class PlayerActivity extends AppCompatActivity
                     musicService.setLooping(true);
                     repeatBtn.setImageResource(R.drawable.ic_repeat_on);
                 }
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
@@ -166,6 +184,9 @@ public class PlayerActivity extends AppCompatActivity
 //        musicService.start();
         Intent intent = new Intent(this, MusicService.class);
         intent.putExtra("servicePosition", position);
+        if(isContinue) {
+            intent.putExtra("isContinue", true);
+        }
         startService(intent);
     }
 
@@ -238,10 +259,8 @@ public class PlayerActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Intent intent = new Intent(this, MusicService.class);
+
         bindService(intent, this, BIND_AUTO_CREATE);
-//        playThreadBtn();
-//        nextThreadBtn();
-//        prevThreadBtn();
     }
 
     @Override
@@ -249,22 +268,6 @@ public class PlayerActivity extends AppCompatActivity
         super.onPause();
         unbindService(this);
     }
-
-    //    private void playThreadBtn() {
-//        playThread = new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                playPauseBtn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        playPauseBtnClicked();
-//                    }
-//                });
-//            }
-//        };
-//        playThread.start();
-//    }
 
     @Override
     public void playPauseBtnClicked() {
@@ -277,6 +280,12 @@ public class PlayerActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     if (musicService != null) {
+                        if(musicService.close) {
+                            handler.removeCallbacks(this);
+//                            musicService.stop();
+//                            musicService.release();
+                            return;
+                        }
                         int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                         seekBar.setProgress(mCurrentPosition);
                     }
@@ -292,6 +301,12 @@ public class PlayerActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     if (musicService != null) {
+                        if(musicService.close) {
+                            handler.removeCallbacks(this);
+//                            musicService.stop();
+//                            musicService.release();
+                            return;
+                        }
                         int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                         seekBar.setProgress(mCurrentPosition);
                     }
@@ -300,22 +315,6 @@ public class PlayerActivity extends AppCompatActivity
             });
         }
     }
-
-//    private void nextThreadBtn() {
-//        nextThread = new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                nextBtn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        nextBtnClicked();
-//                    }
-//                });
-//            }
-//        };
-//        nextThread.start();
-//    }
 
     @Override
     public void nextBtnClicked() {
@@ -337,6 +336,12 @@ public class PlayerActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (musicService != null) {
+                    if(musicService.close) {
+                        handler.removeCallbacks(this);
+//                        musicService.stop();
+//                        musicService.release();
+                        return;
+                    }
                     int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                     seekBar.setProgress(mCurrentPosition);
                 }
@@ -354,22 +359,6 @@ public class PlayerActivity extends AppCompatActivity
         Random random = new Random();
         return random.nextInt(i + 1);
     }
-
-//    private void prevThreadBtn() {
-//        prevThread = new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                prevBtn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        prevBtnClicked();
-//                    }
-//                });
-//            }
-//        };
-//        prevThread.start();
-//    }
 
     @Override
     public void prevBtnClicked() {
@@ -396,6 +385,12 @@ public class PlayerActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (musicService != null) {
+                    if(musicService.close) {
+                        handler.removeCallbacks(this);
+//                        musicService.stop();
+//                        musicService.release();
+                        return;
+                    }
                     int mCurrentPosition = musicService.getCurrentPosition() / 1000;
                     seekBar.setProgress(mCurrentPosition);
                 }
@@ -414,7 +409,7 @@ public class PlayerActivity extends AppCompatActivity
         MusicService.MyBinder binder = (MusicService.MyBinder) iBinder;
         musicService = binder.getService();
         musicService.setActionPlaying(this);
-        Toast.makeText(this, "Service Connected: " + musicService, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Service Connected: " + musicService, Toast.LENGTH_SHORT).show();
         seekBar.setMax(musicService.getDuration() / 1000);
         metaData(uri);
         songName.setText(listSong.get(position).getTitle());

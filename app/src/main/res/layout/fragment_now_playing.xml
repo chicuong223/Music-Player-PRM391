@@ -40,32 +40,49 @@
             android:src="@drawable/ic_play"
             app:fabSize="mini" />
 
-        <TextView
-            android:id="@+id/song_name_mini_player"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/mini_imgPrev"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_previous"
+            android:layout_toStartOf="@+id/mini_play_pause_btn"/>
+        <RelativeLayout
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_toStartOf="@+id/mini_play_pause_btn"
             android:layout_toEndOf="@+id/mini_player_album_art"
-            android:maxLines="1"
-            android:text="Song Name"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:layout_toStartOf="@+id/mini_imgPrev"
+            android:id="@+id/mini_song_artist_layout">
+            <TextView
+                android:id="@+id/song_name_mini_player"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="50dp"
+                android:text="Song Name"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"/>
 
-        <TextView
-            android:id="@+id/artist_mini_player"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_toStartOf="@+id/mini_play_pause_btn"
-            android:layout_toEndOf="@+id/mini_player_album_art"
-            android:layout_below="@+id/song_name_mini_player"
-            android:maxLines="1"
-            android:text="Artist"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/artist_mini_player"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="51dp"
+                android:text="Artist"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_below="@+id/song_name_mini_player"/>
+        </RelativeLayout>
     </RelativeLayout>
 
 </FrameLayout>

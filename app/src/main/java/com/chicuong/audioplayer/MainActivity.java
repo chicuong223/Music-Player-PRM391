@@ -8,10 +8,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,8 +30,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
+    public static boolean SHOW_MINI_PLAYER = false;
     static List<MusicFiles> musicFiles;
     static boolean shuffleBoolean = false, repeatBoolean = false;
+    public static final String SONG_LAST_PLAYED = "LAST_PLAYED";
+    public static final String SONG_FILE = "STORED_MUSIC";
+    public static final String ARTIST_NAME = "ARTIST_NAME";
+    public static final String SONG_NAME = "SONG NAME";
+    public static String ARTIST_TO_FRAG = null;
+    public static String SONG_NAME_TO_FRAG = null;
+    public static String PATH_TO_FRAG = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         List<MusicFiles> tmpList = new ArrayList<>();
 
         //Lấy media audio từ external storage
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ;
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
         //biến để tham chiếu các tag của file audio
         String[] projection = {
@@ -133,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
         //lấy từng tag của file
         //gắn file vô một danh sách tạm
         //trả về danh sách đó
-        if(cursor != null) {
-            while(cursor.moveToNext()) {
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 String album = cursor.getString(0);
                 String title = cursor.getString(1);
                 String duration = cursor.getString(2);
@@ -149,5 +159,25 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
         }
         return tmpList;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE);
+        String path = preferences.getString(SONG_FILE, null);
+        String songName = preferences.getString(SONG_NAME, null);
+        String artist = preferences.getString(ARTIST_NAME, null);
+        if (path != null) {
+            SHOW_MINI_PLAYER = true;
+            PATH_TO_FRAG = path;
+            ARTIST_TO_FRAG = artist;
+            SONG_NAME_TO_FRAG = songName;
+        } else {
+            SHOW_MINI_PLAYER = false;
+            PATH_TO_FRAG = null;
+            ARTIST_TO_FRAG = null;
+            SONG_NAME_TO_FRAG = null;
+        }
     }
 }
