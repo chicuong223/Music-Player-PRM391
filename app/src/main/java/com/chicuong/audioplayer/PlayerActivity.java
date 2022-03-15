@@ -174,6 +174,7 @@ public class PlayerActivity extends AppCompatActivity
     private void getIntentMethod() {
         position = getIntent().getIntExtra("position", -1);
         listSong = musicFiles;
+        //listSong = _mFiles
         if (listSong != null) {
             playPauseBtn.setImageResource(R.drawable.ic_pause);
             uri = Uri.parse(listSong.get(position).getPath());

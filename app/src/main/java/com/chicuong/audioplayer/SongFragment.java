@@ -1,6 +1,7 @@
 package com.chicuong.audioplayer;
 
 import static com.chicuong.audioplayer.MainActivity.musicFiles;
+import static com.chicuong.audioplayer.MusicAdapter._mFiles;
 
 import android.os.Bundle;
 
@@ -15,7 +16,7 @@ import android.view.ViewGroup;
 public class SongFragment extends Fragment {
 
     RecyclerView recyclerView;
-    MusicAdapter musicAdapter;
+    static MusicAdapter musicAdapter;
 
     public SongFragment() {
         // Required empty public constructor
@@ -28,8 +29,8 @@ public class SongFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_song, container, false);
         recyclerView = view.findViewById(R.id.recycle_view);
         recyclerView.setHasFixedSize(true);
-        if(musicFiles.size() >= 1) {
-            musicAdapter = new MusicAdapter(getContext(), musicFiles);
+        if(_mFiles.size() >= 1) {
+            musicAdapter = new MusicAdapter(getContext(), _mFiles);
             recyclerView.setAdapter(musicAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         }
