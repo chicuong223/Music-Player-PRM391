@@ -119,7 +119,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection, A
         layoutSongArtist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (service != null) {
+                if (service != null && service.mediaPlayer != null) {
                     SharedPreferences preferences = getActivity().getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE);
                     String path = preferences.getString(SONG_FILE, null);
                     int songPosition = preferences.getInt(SONG_POSITION, -1);
@@ -141,7 +141,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection, A
         albumArt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (service != null) {
+                if (service != null && service.mediaPlayer != null) {
                     SharedPreferences preferences = getActivity().getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE);
                     String path = preferences.getString(SONG_FILE, null);
                     int songPosition = preferences.getInt(SONG_POSITION, -1);
