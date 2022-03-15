@@ -8,6 +8,8 @@ import static com.chicuong.audioplayer.MainActivity.ARTIST_NAME;
 import static com.chicuong.audioplayer.MainActivity.SONG_FILE;
 import static com.chicuong.audioplayer.MainActivity.SONG_LAST_PLAYED;
 import static com.chicuong.audioplayer.MainActivity.SONG_NAME;
+import static com.chicuong.audioplayer.MainActivity.SONG_POSITION;
+import static com.chicuong.audioplayer.MainActivity.musicFiles;
 import static com.chicuong.audioplayer.PlayerActivity.listSong;
 
 import android.app.Notification;
@@ -37,7 +39,7 @@ import java.util.List;
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
     IBinder binder = new MyBinder();
     MediaPlayer mediaPlayer;
-    List<MusicFiles> musicFiles = new ArrayList<>();
+    List<MusicFiles> serviceMusicFiles = new ArrayList<>();
     Uri uri;
     int position = -1;
     ActionPlaying actionPlaying;
@@ -93,12 +95,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     private void playMedia(int startPosition) {
-        musicFiles = listSong;
+        serviceMusicFiles = musicFiles;
         position = startPosition;
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
-            if (musicFiles != null) {
+            if (serviceMusicFiles != null) {
                 createMediaPlayer(position);
             }
         } else {
@@ -143,12 +145,13 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     void createMediaPlayer(int positionInner) {
         position = positionInner;
-        uri = Uri.parse(listSong.get(position).getPath());
+        uri = Uri.parse(serviceMusicFiles.get(position).getPath());
         SharedPreferences.Editor editor = getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE)
                 .edit();
         editor.putString(SONG_FILE, uri.toString());
-        editor.putString(ARTIST_NAME, musicFiles.get(position).getArtist());
-        editor.putString(SONG_NAME, musicFiles.get(position).getTitle());
+        editor.putString(ARTIST_NAME, serviceMusicFiles.get(position).getArtist());
+        editor.putString(SONG_NAME, serviceMusicFiles.get(position).getTitle());
+        editor.putInt(SONG_POSITION, position);
         editor.apply();
         mediaPlayer = MediaPlayer.create(getBaseContext(), uri);
     }
