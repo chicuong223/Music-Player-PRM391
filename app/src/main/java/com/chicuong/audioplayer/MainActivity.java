@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -37,9 +38,11 @@ public class MainActivity extends AppCompatActivity {
     public static final String SONG_FILE = "STORED_MUSIC";
     public static final String ARTIST_NAME = "ARTIST_NAME";
     public static final String SONG_NAME = "SONG NAME";
+    public static final String SONG_POSITION = "POSITION";
     public static String ARTIST_TO_FRAG = null;
     public static String SONG_NAME_TO_FRAG = null;
     public static String PATH_TO_FRAG = null;
+    public static int POSITION_TO_FRAG = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,16 +171,24 @@ public class MainActivity extends AppCompatActivity {
         String path = preferences.getString(SONG_FILE, null);
         String songName = preferences.getString(SONG_NAME, null);
         String artist = preferences.getString(ARTIST_NAME, null);
+        int songPosition = preferences.getInt(SONG_POSITION, -1);
         if (path != null) {
             SHOW_MINI_PLAYER = true;
             PATH_TO_FRAG = path;
             ARTIST_TO_FRAG = artist;
             SONG_NAME_TO_FRAG = songName;
+            POSITION_TO_FRAG = songPosition;
         } else {
             SHOW_MINI_PLAYER = false;
             PATH_TO_FRAG = null;
             ARTIST_TO_FRAG = null;
             SONG_NAME_TO_FRAG = null;
+            POSITION_TO_FRAG = -1;
+        }
+        if(SHOW_MINI_PLAYER) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.frag_bottom_player, NowPlayingFragment.class, null);
+            ft.commit();
         }
     }
 }
