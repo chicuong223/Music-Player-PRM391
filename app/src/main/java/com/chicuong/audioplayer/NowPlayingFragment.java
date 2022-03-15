@@ -252,13 +252,13 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
 //        }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (getContext() != null) {
-            getContext().unbindService(this);
-        }
-    }
+    //@Override
+    //public void onPause() {
+    //    super.onPause();
+    //    if (getContext() != null) {
+    //        getContext().unbindService(this);
+    //    }
+    //}
 
 
     @Override
