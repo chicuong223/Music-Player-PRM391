@@ -29,8 +29,8 @@ public class SongFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_song, container, false);
         recyclerView = view.findViewById(R.id.recycle_view);
         recyclerView.setHasFixedSize(true);
-        if(_mFiles.size() >= 1) {
-            musicAdapter = new MusicAdapter(getContext(), _mFiles);
+        if(musicFiles.size() >= 1) {
+            musicAdapter = new MusicAdapter(getContext(), musicFiles);
             recyclerView.setAdapter(musicAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         }

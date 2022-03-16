@@ -1,5 +1,6 @@
 package com.chicuong.audioplayer;
 
+import static com.chicuong.audioplayer.AlbumDetailsAdapter.albumFiles;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_NEXT;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PLAY;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PREVIOUS;
@@ -8,6 +9,7 @@ import static com.chicuong.audioplayer.MainActivity.SHOW_MINI_PLAYER;
 import static com.chicuong.audioplayer.MainActivity.musicFiles;
 import static com.chicuong.audioplayer.MainActivity.repeatBoolean;
 import static com.chicuong.audioplayer.MainActivity.shuffleBoolean;
+import static com.chicuong.audioplayer.MusicAdapter._mFiles;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,6 +63,7 @@ public class PlayerActivity extends AppCompatActivity
     private Thread playThread, prevThread, nextThread;
     MusicService musicService;
     boolean isContinue = false;
+    boolean album;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,8 +176,16 @@ public class PlayerActivity extends AppCompatActivity
 
     private void getIntentMethod() {
         position = getIntent().getIntExtra("position", -1);
-        listSong = musicFiles;
-        //listSong = _mFiles
+        String sender = getIntent().getStringExtra("sender");
+        if (sender != null && sender.equals("albumDetails")) {
+            listSong = albumFiles;
+            album = true;
+        }
+        else {
+            listSong = _mFiles;
+            album = false;
+        }
+//        listSong = musicFiles;
         if (listSong != null) {
             playPauseBtn.setImageResource(R.drawable.ic_pause);
             uri = Uri.parse(listSong.get(position).getPath());
@@ -187,6 +198,9 @@ public class PlayerActivity extends AppCompatActivity
         intent.putExtra("servicePosition", position);
         if(isContinue) {
             intent.putExtra("isContinue", true);
+        }
+        if (sender != null && sender.equals("albumDetails")) {
+            intent.putExtra("album", true);
         }
         startService(intent);
     }
@@ -274,7 +288,7 @@ public class PlayerActivity extends AppCompatActivity
     public void playPauseBtnClicked() {
         if (musicService.isPlaying()) {
             playPauseBtn.setImageResource(R.drawable.ic_play);
-            musicService.showNotification(R.drawable.ic_play);
+            musicService.showNotification(R.drawable.ic_play, album);
             musicService.pause();
             seekBar.setMax(musicService.getDuration() / 1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -295,7 +309,7 @@ public class PlayerActivity extends AppCompatActivity
             });
         } else {
             playPauseBtn.setImageResource(R.drawable.ic_pause);
-            musicService.showNotification(R.drawable.ic_pause);
+            musicService.showNotification(R.drawable.ic_pause, album);
             musicService.start();
             seekBar.setMax(musicService.getDuration() / 1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -351,7 +365,7 @@ public class PlayerActivity extends AppCompatActivity
         });
         musicService.setLooping(repeatBoolean);
         musicService.onCompleted();
-        musicService.showNotification(R.drawable.ic_pause);
+        musicService.showNotification(R.drawable.ic_pause, album);
         playPauseBtn.setImageResource(R.drawable.ic_pause);
         musicService.start();
     }
@@ -365,9 +379,9 @@ public class PlayerActivity extends AppCompatActivity
     public void prevBtnClicked() {
         musicService.stop();
         musicService.release();
-        if (shuffleBoolean && !repeatBoolean) {
+        if (shuffleBoolean) {
             position = getRandom(listSong.size() - 1);
-        } else if (!shuffleBoolean && !repeatBoolean) {
+        }else {
             //nếu position < 0
             //play cái cuối cùng
             //ko thì play cái trước nó
@@ -401,7 +415,7 @@ public class PlayerActivity extends AppCompatActivity
         musicService.setLooping(repeatBoolean);
         playPauseBtn.setImageResource(R.drawable.ic_pause);
         musicService.onCompleted();
-        musicService.showNotification(R.drawable.ic_pause);
+        musicService.showNotification(R.drawable.ic_pause, album);
         musicService.start();
     }
 
@@ -416,7 +430,7 @@ public class PlayerActivity extends AppCompatActivity
         songName.setText(listSong.get(position).getTitle());
         artistName.setText(listSong.get(position).getArtist());
         musicService.onCompleted();
-        musicService.showNotification(R.drawable.ic_pause);
+        musicService.showNotification(R.drawable.ic_pause, album);
     }
 
     @Override

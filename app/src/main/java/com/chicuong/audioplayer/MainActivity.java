@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -40,9 +41,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static final String SONG_FILE = "STORED_MUSIC";
     public static final String ARTIST_NAME = "ARTIST_NAME";
     public static final String SONG_NAME = "SONG NAME";
+    public static final String SONG_POSITION = "POSITION";
     public static String ARTIST_TO_FRAG = null;
     public static String SONG_NAME_TO_FRAG = null;
     public static String PATH_TO_FRAG = null;
+    public static int POSITION_TO_FRAG = -1;
+    static ArrayList<MusicFiles> albums = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,19 +66,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == REQUEST_CODE) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                //do what permission related
-//                Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
-//            } else {
-//                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
-//                        , REQUEST_CODE);
-//            }
-//        }
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //do what permission related
+                Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                musicFiles = getAllAudio(this);
+                initViewPager();
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                        , REQUEST_CODE);
+            }
+        }
+    }
 
     private void initViewPager() {
         ViewPager viewPager = findViewById(R.id.viewpager);
@@ -122,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public static List<MusicFiles> getAllAudio(Context context) {
+        ArrayList<String> duplicate = new ArrayList<>();
         List<MusicFiles> tmpList = new ArrayList<>();
 
         //Lấy media audio từ external storage
@@ -157,6 +164,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 MusicFiles musicFiles = new MusicFiles(path, title, album, artist, duration, id);
                 Log.e("Path:" + path, "ID: " + musicFiles.getId());
                 tmpList.add(musicFiles);
+                if (!duplicate.contains(album)) {
+                    albums.add(musicFiles);
+                    duplicate.add(album);
+                }
             }
             cursor.close();
         }
@@ -170,16 +181,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         String path = preferences.getString(SONG_FILE, null);
         String songName = preferences.getString(SONG_NAME, null);
         String artist = preferences.getString(ARTIST_NAME, null);
+        int songPosition = preferences.getInt(SONG_POSITION, -1);
         if (path != null) {
             SHOW_MINI_PLAYER = true;
             PATH_TO_FRAG = path;
             ARTIST_TO_FRAG = artist;
             SONG_NAME_TO_FRAG = songName;
+            POSITION_TO_FRAG = songPosition;
         } else {
             SHOW_MINI_PLAYER = false;
             PATH_TO_FRAG = null;
             ARTIST_TO_FRAG = null;
             SONG_NAME_TO_FRAG = null;
+            POSITION_TO_FRAG = -1;
+        }
+        if(SHOW_MINI_PLAYER) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.frag_bottom_player, NowPlayingFragment.class, null);
+            ft.commit();
         }
     }
 
