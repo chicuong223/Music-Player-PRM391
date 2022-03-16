@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static String PATH_TO_FRAG = null;
     public static int POSITION_TO_FRAG = -1;
     static ArrayList<MusicFiles> albums = new ArrayList<>();
+    private String MY_SORT_PREF = "SortOrder";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,13 +128,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    public static List<MusicFiles> getAllAudio(Context context) {
+    public List<MusicFiles> getAllAudio(Context context) {
+        SharedPreferences preferences = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
+        String sortOrder = preferences.getString("sorting", "sortByName");
         ArrayList<String> duplicate = new ArrayList<>();
         List<MusicFiles> tmpList = new ArrayList<>();
-
+        String order = null;
         //Lấy media audio từ external storage
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
+        switch (sortOrder){
+            case "sortByName":
+                order = MediaStore.MediaColumns.DISPLAY_NAME + " ASC";
+                break;
+            case "sortByDate":
+                order = MediaStore.MediaColumns.DATE_ADDED + " ASC";
+                break;
+            case "sortBySize":
+                order = MediaStore.MediaColumns.SIZE + " DESC";
+                break;
+        }
         //biến để tham chiếu các tag của file audio
         String[] projection = {
                 MediaStore.Audio.Media.ALBUM,
@@ -146,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         //con trỏ để duyệt qua danh sách các audio lấy được
         //params: uri, biến tham chiếu tag
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, order);
 
         //duyệt qua danh sách
         //lấy từng tag của file
@@ -228,5 +242,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
         SongFragment.musicAdapter.updateList(myFiles);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        SharedPreferences.Editor editor = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE).edit();
+        switch (item.getItemId()){
+            case R.id.by_name:
+                editor.putString("sorting", "sortByName");
+                editor.apply();
+                this.recreate();
+                break;
+            case R.id.by_date:
+                editor.putString("sorting", "sortByDate");
+                editor.apply();
+                this.recreate();
+                break;
+            case R.id.by_size:
+                editor.putString("sorting", "sortBySize");
+                editor.apply();
+                this.recreate();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
