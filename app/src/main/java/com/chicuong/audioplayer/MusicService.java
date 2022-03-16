@@ -1,5 +1,6 @@
 package com.chicuong.audioplayer;
 
+import static com.chicuong.audioplayer.AlbumDetailsAdapter.albumFiles;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_NEXT;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PLAY;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PREVIOUS;
@@ -66,8 +67,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         boolean isContinue = intent.getBooleanExtra("isContinue", false);
         close = intent.getBooleanExtra("Close", false);
         String actionName = intent.getStringExtra("ActionName");
+        boolean album = intent.getBooleanExtra("album", false);
         if (myPosition != -1 && !isContinue) {
-            playMedia(myPosition);
+            playMedia(myPosition, album);
         }
         if(close) {
             if(mediaPlayer != null) {
@@ -94,8 +96,13 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         return START_STICKY;
     }
 
-    private void playMedia(int startPosition) {
-        serviceMusicFiles = musicFiles;
+    private void playMedia(int startPosition, boolean album) {
+        if(album) {
+            serviceMusicFiles = albumFiles;
+        }
+        else {
+            serviceMusicFiles = musicFiles;
+        }
         position = startPosition;
         if (mediaPlayer != null) {
             mediaPlayer.stop();
@@ -187,7 +194,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         this.actionPlaying = actionPlaying;
     }
 
-    void showNotification(int playPauseBtn) {
+    void showNotification(int playPauseBtn, boolean album) {
         Intent intent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(intent);
@@ -220,9 +227,16 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         PendingIntent closePending = PendingIntent
                 .getBroadcast(this, 0, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        List<MusicFiles> lst = new ArrayList<>();
+        if(album) {
+            lst = albumFiles;
+        }
+        else {
+            lst = musicFiles;
+        }
         //album picture to display on notification
         byte[] picture = null;
-        picture = getAlbumArt(musicFiles.get(position).getPath());
+        picture = getAlbumArt(lst.get(position).getPath());
         Bitmap thumb = null;
         if (picture != null) {
             thumb = BitmapFactory.decodeByteArray(picture, 0, picture.length);
@@ -233,8 +247,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_2)
                 .setSmallIcon(playPauseBtn)
                 .setLargeIcon(thumb)
-                .setContentTitle(musicFiles.get(position).getTitle())
-                .setContentText(musicFiles.get(position).getArtist())
+                .setContentTitle(lst.get(position).getTitle())
+                .setContentText(lst.get(position).getArtist())
                 .addAction(R.drawable.ic_previous, "Previous", prevPending)
                 .addAction(playPauseBtn, "Pause", pausePending)
                 .addAction(R.drawable.ic_next, "Next", nextPending)

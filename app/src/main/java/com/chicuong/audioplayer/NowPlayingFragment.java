@@ -111,7 +111,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection, A
                         }
                         service.playPauseBtnClicked();
                     }
-                    service.showNotification(R.drawable.ic_pause);
+                    service.showNotification(R.drawable.ic_pause, false);
                 }
             }
         });
@@ -238,11 +238,11 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection, A
     public void playPauseBtnClicked() {
         if (service.isPlaying()) {
             playPauseBtn.setImageResource(R.drawable.ic_play);
-            service.showNotification(R.drawable.ic_play);
+            service.showNotification(R.drawable.ic_play, false);
             service.pause();
         } else {
             playPauseBtn.setImageResource(R.drawable.ic_pause);
-            service.showNotification(R.drawable.ic_pause);
+            service.showNotification(R.drawable.ic_pause, false);
             service.start();
         }
     }
@@ -288,7 +288,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection, A
                     service.position = POSITION_TO_FRAG + 1 ;
                     getContext().startService(intent);
                 }
-                service.showNotification(R.drawable.ic_pause);
+                service.showNotification(R.drawable.ic_pause, false);
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE)
                         .edit();
                 editor.putString(SONG_FILE,
@@ -378,7 +378,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection, A
                     service.position = POSITION_TO_FRAG - 1 ;
                     getContext().startService(intent);
                 }
-                service.showNotification(R.drawable.ic_pause);
+                service.showNotification(R.drawable.ic_pause, false);
 
                 //set new data to SharedPreference
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences(SONG_LAST_PLAYED, MODE_PRIVATE)
