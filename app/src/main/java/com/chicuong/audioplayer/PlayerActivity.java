@@ -1,5 +1,6 @@
 package com.chicuong.audioplayer;
 
+import static com.chicuong.audioplayer.AlbumDetailsAdapter.albumFiles;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_NEXT;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PLAY;
 import static com.chicuong.audioplayer.ApplicationClass.ACTION_PREVIOUS;
@@ -173,6 +174,13 @@ public class PlayerActivity extends AppCompatActivity
 
     private void getIntentMethod() {
         position = getIntent().getIntExtra("position", -1);
+        String sender = getIntent().getStringExtra("sender");
+        if (sender != null && sender.equals("albumDetails")) {
+            listSong = albumFiles;
+        }
+        else {
+            listSong = musicFiles;
+        }
         listSong = musicFiles;
         if (listSong != null) {
             playPauseBtn.setImageResource(R.drawable.ic_pause);

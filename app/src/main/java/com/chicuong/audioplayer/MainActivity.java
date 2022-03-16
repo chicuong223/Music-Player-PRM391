@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static String SONG_NAME_TO_FRAG = null;
     public static String PATH_TO_FRAG = null;
     public static int POSITION_TO_FRAG = -1;
+    static ArrayList<MusicFiles> albums = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static List<MusicFiles> getAllAudio(Context context) {
+        ArrayList<String> duplicate = new ArrayList<>();
         List<MusicFiles> tmpList = new ArrayList<>();
 
         //Lấy media audio từ external storage
@@ -158,6 +160,10 @@ public class MainActivity extends AppCompatActivity {
                 MusicFiles musicFiles = new MusicFiles(path, title, album, artist, duration, id);
                 Log.e("Path:" + path, "ID: " + musicFiles.getId());
                 tmpList.add(musicFiles);
+                if (!duplicate.contains(album)) {
+                    albums.add(musicFiles);
+                    duplicate.add(album);
+                }
             }
             cursor.close();
         }
