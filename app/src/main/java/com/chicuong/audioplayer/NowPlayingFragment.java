@@ -346,9 +346,9 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection, A
                 if(service.mediaPlayer != null) {
                     service.stop();
                     service.release();
-                    if (shuffleBoolean && !repeatBoolean) {
+                    if (shuffleBoolean) {
                         position = getRandom(service.serviceMusicFiles.size() - 1);
-                    } else if (!shuffleBoolean && !repeatBoolean) {
+                    } else {
                         //nếu position < 0
                         //play cái cuối cùng
                         //ko thì play cái trước nó

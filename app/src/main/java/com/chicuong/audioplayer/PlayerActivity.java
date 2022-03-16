@@ -379,9 +379,9 @@ public class PlayerActivity extends AppCompatActivity
     public void prevBtnClicked() {
         musicService.stop();
         musicService.release();
-        if (shuffleBoolean && !repeatBoolean) {
+        if (shuffleBoolean) {
             position = getRandom(listSong.size() - 1);
-        } else if (!shuffleBoolean && !repeatBoolean) {
+        }else {
             //nếu position < 0
             //play cái cuối cùng
             //ko thì play cái trước nó
