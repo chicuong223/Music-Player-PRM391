@@ -9,6 +9,7 @@ import static com.chicuong.audioplayer.MainActivity.SHOW_MINI_PLAYER;
 import static com.chicuong.audioplayer.MainActivity.musicFiles;
 import static com.chicuong.audioplayer.MainActivity.repeatBoolean;
 import static com.chicuong.audioplayer.MainActivity.shuffleBoolean;
+import static com.chicuong.audioplayer.MusicAdapter._mFiles;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -181,7 +182,7 @@ public class PlayerActivity extends AppCompatActivity
             album = true;
         }
         else {
-            listSong = musicFiles;
+            listSong = _mFiles;
             album = false;
         }
 //        listSong = musicFiles;

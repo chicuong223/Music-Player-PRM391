@@ -1,6 +1,7 @@
 package com.chicuong.audioplayer;
 
 import static com.chicuong.audioplayer.MainActivity.musicFiles;
+import static com.chicuong.audioplayer.MusicAdapter._mFiles;
 
 import android.os.Bundle;
 
@@ -15,7 +16,7 @@ import android.view.ViewGroup;
 public class SongFragment extends Fragment {
 
     RecyclerView recyclerView;
-    MusicAdapter musicAdapter;
+    static MusicAdapter musicAdapter;
 
     public SongFragment() {
         // Required empty public constructor

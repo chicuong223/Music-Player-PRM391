@@ -30,12 +30,13 @@ import com.google.android.material.snackbar.Snackbar;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder> {
 
     private Context _mContext;
-    private List<MusicFiles> _mFiles;
+    static List<MusicFiles> _mFiles;
 
     MusicAdapter(Context mContext, List<MusicFiles> mFiles) {
         this._mContext = mContext;
@@ -157,5 +158,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
         //after using retriever, we must release it
         retriever.release();
         return art;
+    }
+
+    void updateList(ArrayList<MusicFiles> musicFilesArrayList){
+        _mFiles = new ArrayList<>();
+        _mFiles.addAll(musicFilesArrayList);
+        notifyDataSetChanged();
     }
 }

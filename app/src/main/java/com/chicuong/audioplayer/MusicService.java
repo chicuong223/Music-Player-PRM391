@@ -11,6 +11,7 @@ import static com.chicuong.audioplayer.MainActivity.SONG_LAST_PLAYED;
 import static com.chicuong.audioplayer.MainActivity.SONG_NAME;
 import static com.chicuong.audioplayer.MainActivity.SONG_POSITION;
 import static com.chicuong.audioplayer.MainActivity.musicFiles;
+import static com.chicuong.audioplayer.MusicAdapter._mFiles;
 import static com.chicuong.audioplayer.PlayerActivity.listSong;
 
 import android.app.Notification;
@@ -101,7 +102,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             serviceMusicFiles = albumFiles;
         }
         else {
-            serviceMusicFiles = musicFiles;
+//            serviceMusicFiles = musicFiles;
+            serviceMusicFiles = _mFiles;
         }
         position = startPosition;
         if (mediaPlayer != null) {
