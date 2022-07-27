@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         String sortOrder = preferences.getString("sorting", "sortByName");
         ArrayList<String> duplicate = new ArrayList<>();
         List<MusicFiles> tmpList = new ArrayList<>();
+        albums.clear();
         String order = null;
         //Lấy media audio từ external storage
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -209,11 +210,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             SONG_NAME_TO_FRAG = null;
             POSITION_TO_FRAG = -1;
         }
-        if(SHOW_MINI_PLAYER) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.frag_bottom_player, NowPlayingFragment.class, null);
-            ft.commit();
-        }
+//        if(SHOW_MINI_PLAYER) {
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.add(R.id.frag_bottom_player, NowPlayingFragment.class, null);
+//            ft.commit();
+//        }
     }
 
     @Override
